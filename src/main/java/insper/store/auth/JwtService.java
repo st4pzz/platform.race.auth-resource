@@ -55,6 +55,7 @@ public class JwtService {
         final Claims claims = resolveClaims(token);
         return Token.builder()
             .id(claims.getId())
+            .name(claims.getSubject())
             .role(claims.get("role", String.class))
             .build();
     }

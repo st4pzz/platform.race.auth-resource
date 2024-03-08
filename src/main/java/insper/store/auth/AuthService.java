@@ -51,5 +51,9 @@ public class AuthService {
             .token(token)
             .build();
     }
+
+    public Token solve(String token) {
+        return jwtService.getToken(token);
+    }
     
 }
