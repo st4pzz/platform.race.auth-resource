@@ -2,6 +2,13 @@ spring:
   application:
     name: store-auth
 
+management:
+  endpoints:
+    web:
+      base-path: /auth/actuator
+      exposure:
+        include: [ 'prometheus' ]
+
 eureka:
   client:
     register-with-eureka: true
