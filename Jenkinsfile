@@ -6,6 +6,11 @@ pipeline {
                 build job: 'race.auth', wait: true
             }
         }
+        stage('Build Redis') {
+            steps {
+                build job: 'race.redis', wait: true
+            }
+        }
         stage('Build') { 
             steps {
                 sh 'mvn clean package'
