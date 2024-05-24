@@ -1,9 +1,9 @@
 pipeline {
     agent any
     stages {
-        stage('Build Auth') {
+        stage('Build Partida') {
             steps {
-                build job: 'race.auth', wait: true
+                build job: 'race.partida', wait: true
             }
         }
         stage('Build Redis') {
@@ -19,7 +19,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    account = docker.build("weeeveralex/auth:${env.BUILD_ID}", "-f Dockerfile .")
+                    partida = docker.build("weeeveralex/partida:${env.BUILD_ID}", "-f Dockerfile .")
                 }
             }
         }
@@ -27,8 +27,8 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credential') {
-                        account.push("${env.BUILD_ID}")
-                        account.push("latest")
+                        partida.push("${env.BUILD_ID}")
+                        partida.push("latest")
                     }
                 }
             }
@@ -38,10 +38,9 @@ pipeline {
                 withCredentials([ string(credentialsId: 'minikube_credentials', variable: 'api_token') ]) {
                     sh 'kubectl --token $api_token --server https://host.docker.internal:51293  --insecure-skip-tls-verify=true apply -f ./k8s/deployment.yaml '
                     sh 'kubectl --token $api_token --server https://host.docker.internal:51293  --insecure-skip-tls-verify=true apply -f ./k8s/service.yaml '
-                    sh 'kubectl --token $api_token --server https://host.docker.internal:51293 --insecure-skip-tls-verify=true apply -f ./k8s/configmap.yaml'
+                    sh 'kubectl --token $api_token --server https://host.docker.internal:51293 --insecure-skip-tls-verify=true apply -f ./k8s/configmap.yaml '
                 }
             }
         }
     }
 }
-
