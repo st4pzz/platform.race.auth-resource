@@ -60,7 +60,7 @@ public class AuthService {
     }
 
     public LoginOut fallbackAuthenticate(String email, String password, Throwable t) {
-        return new LoginOut();
+        return null;
     }
 
     public Token solve(String token) {
