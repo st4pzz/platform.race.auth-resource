@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: products-circuit-breaker-config
+data:
+  application.yml: |-
+    resilience4j.circuitbreaker:
+      instances:
+        productsCircuitBreaker:
+          slidingWindowSize: 10   # Uma janela menor para reagir mais rapidamente às mudanças
+          minimumNumberOfCalls: 5 # Reduzir o número mínimo de chamadas para uma reação mais rápida
+          waitDurationInOpenState: 1m # Aumentar o tempo de espera para tentar se recuperar da falta de internet
+          failureRateThreshold: 80  # Aumentar a tolerância de falhas antes de abrir o circuito
+          permittedNumberOfCallsInHalfOpenState: 3 # Testar com menos chamadas em estado semi-aberto
+          automaticTransitionFromOpenToHalfOpenEnabled: true

@@ -3,47 +3,54 @@ kind: Deployment
 metadata:
   name: auth
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: auth
-  replicas: 1
   template:
     metadata:
       labels:
         app: auth
     spec:
       containers:
-        - name: auth
-          image: luccahiratsuca/auth:latest
-          ports:
-            - containerPort: 8080
-          env:
-            - name: DISCOVERY_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: discovery-configmap
-                  key: DISCOVERY_HOST
-
-            - name: POSTGRES_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-configmap
-                  key: POSTGRES_HOST
-
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-configmap
-                  key: POSTGRES_DB
-
-            - name: POSTGRES_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_USERNAME
-
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: POSTGRES_PASSWORD
+      - name: auth
+        image: weeeveralex/auth:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DISCOVERY_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: discovery-configmap
+              key: DISCOVERY_HOST
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-configmap
+              key: POSTGRES_HOST
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: postgres-configmap
+              key: POSTGRES_DB
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: POSTGRES_PASSWORD
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+          value: "health,info,prometheus"
+        volumeMounts:
+        - name: config-volume
+          mountPath: "/config"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: products-circuit-breaker-config

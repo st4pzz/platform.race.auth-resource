@@ -3,6 +3,7 @@ package insper.store.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 import insper.store.account.AccountController;
 import insper.store.account.AccountIn;
@@ -18,7 +19,7 @@ public class AuthService {
     @Autowired
     private JwtService jwtService;
 
-    @SuppressWarnings("null")
+    @CircuitBreaker(name = "authService", fallbackMethod = "fallbackRegister")
     public String register(Register in) {
         final String password = in.password().trim();
         if (null == password || password.isEmpty()) throw new IllegalArgumentException("Password is required");
@@ -35,6 +36,11 @@ public class AuthService {
         return response.getBody().id();
     }
 
+    public String fallbackRegister(Register in, Throwable t) {
+        return new String(); 
+    }
+
+    @CircuitBreaker(name = "authService", fallbackMethod = "fallbackAuthenticate")
     public LoginOut authenticate(String email, String password) {
         ResponseEntity<AccountOut> response = accountController.login(LoginIn.builder()
             .email(email)
@@ -46,7 +52,6 @@ public class AuthService {
         final AccountOut account = response.getBody();
 
         // Cria um token JWT
-        @SuppressWarnings("null")
         final String token = jwtService.create(account.id(), account.name(), "regular");
 
         return LoginOut.builder()
@@ -54,8 +59,11 @@ public class AuthService {
             .build();
     }
 
+    public LoginOut fallbackAuthenticate(String email, String password, Throwable t) {
+        return new LoginOut();
+    }
+
     public Token solve(String token) {
         return jwtService.getToken(token);
     }
-    
 }
