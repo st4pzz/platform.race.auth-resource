@@ -5,6 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import insper.store.auth.AuthController; 
+import insper.store.auth.RegisterIn;
+import insper.store.auth.CredentialIn;
+import insper.store.auth.LoginOut;
+import insper.store.auth.SolveIn;
+import insper.store.auth.SolveOut;
+
 @RestController
 public class AuthResource implements AuthController {
 
@@ -13,7 +20,6 @@ public class AuthResource implements AuthController {
 
     @Override
     public ResponseEntity<?> create(RegisterIn in) {
-
         final String id = authService.register(Register.builder()
             .name(in.name())
             .email(in.email())
@@ -46,5 +52,4 @@ public class AuthResource implements AuthController {
                 .build()
         );
     }
-
 }

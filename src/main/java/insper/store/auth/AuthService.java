@@ -10,6 +10,13 @@ import insper.store.account.AccountIn;
 import insper.store.account.AccountOut;
 import insper.store.account.LoginIn;
 
+import insper.store.auth.CredentialIn;
+import insper.store.auth.LoginOut;
+import insper.store.auth.RegisterIn;
+import insper.store.auth.SolveIn;
+import insper.store.auth.SolveOut;
+import insper.store.auth.JwtService;
+
 @Service
 public class AuthService {
 
