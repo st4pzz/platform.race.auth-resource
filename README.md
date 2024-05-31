@@ -18,20 +18,25 @@ A arquitetura do projeto utiliza uma abordagem de microserviços, onde cada comp
 ## Estrutura do Projeto
 
 ```
-platform.race.auth-resource/
+auth-resource/
+├── k8s/
 ├── src/
 │   ├── main/
 │   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── example/
-│   │   │           └── authresource/
-│   │   │               ├── controller/
-│   │   │               ├── model/
-│   │   │               ├── repository/
-│   │   │               └── service/
+│   │       └── insper/
+│   │           └── store/
+│   │               └── auth/
+│   │                   ├── AuthApplication/
+│   │                   ├── AuthResource/
+│   │                   ├── AuthService/
+│   │                   ├── Credential/
+│   │                   ├── JwtService/
+│   │                   ├── Register/
+│   │                   └── Token/
 │   └── resources/
+├── .gitignore
+├── Dockerfile
 ├── Jenkinsfile
-├── docker-compose.yml
 ├── README.md
 └── pom.xml
 ```
